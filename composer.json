@@ -1,0 +1,14 @@
+{
+  "name": "nima/auth-module",
+  "description": "Standalone authentication module",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "AuthModule\\": "src/"
+    }
+  },
+  "require": {
+    "php": "^8.2"
+  }
+}
