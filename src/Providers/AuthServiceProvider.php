@@ -14,6 +14,7 @@ class AuthServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        dd('hi');
         $this->registerAuthGuard();
         $this->registerRoutes();
     }
