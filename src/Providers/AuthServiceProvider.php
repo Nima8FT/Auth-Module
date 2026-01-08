@@ -2,43 +2,41 @@
 
 namespace AuthModule\Providers;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Auth;
 
 class AuthServiceProvider extends ServiceProvider
 {
-    /**
-     * Register bindings and merge configs.
-     */
     public function register(): void
     {
-        if (! class_exists(\Tymon\JWTAuth\JWTAuth::class)) {
-            return;
+        if (class_exists(\Tymon\JWTAuth\Providers\LaravelServiceProvider::class)) {
+            $this->app->register(
+                \Tymon\JWTAuth\Providers\LaravelServiceProvider::class
+            );
         }
 
-        $this->mergeConfigFrom(
-            __DIR__ . '/../../config/auth-module.php',
-            'auth-module'
-        );
+        if (function_exists('config')) {
+            $this->registerAuthGuard();
+        }
     }
 
-    /**
-     * Bootstrap package services.
-     */
     public function boot(): void
     {
-        if (! class_exists(\Tymon\JWTAuth\JWTAuth::class)) {
-            return;
+        $routesPath = __DIR__ . '/../../routes/api.php';
+        if (file_exists($routesPath)) {
+            Route::middleware('api')
+                ->prefix('api')
+                ->group($routesPath);
         }
+    }
 
-        if ($this->app->bound('auth')) {
-            Auth::extend('jwt', function ($app, $name, array $config) {
-                return $app['tymon.jwt.auth'];
-            });
-        }
-
-        $this->loadRoutesFrom(
-            __DIR__ . '/../../routes/api.php'
-        );
+    protected function registerAuthGuard(): void
+    {
+        config([
+            'auth.guards.jwt' => [
+                'driver' => 'jwt',
+                'provider' => 'users',
+            ],
+        ]);
     }
 }
