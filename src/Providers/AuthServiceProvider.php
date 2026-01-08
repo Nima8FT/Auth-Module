@@ -17,7 +17,7 @@ class AuthServiceProvider extends ServiceProvider
         }
 
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/auth-module.php',
+            __DIR__ . '/../../config/auth-module.php',
             'auth-module'
         );
     }
