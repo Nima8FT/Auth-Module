@@ -2,43 +2,43 @@
 
 namespace AuthModule\Providers;
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->registerJwt();
+        if (! class_exists(\Tymon\JWTAuth\JWTAuth::class)) {
+            return;
+        }
     }
 
     public function boot(): void
     {
+        if (! class_exists(\Tymon\JWTAuth\JWTAuth::class)) {
+            return;
+        }
+
         $this->registerAuthGuard();
         $this->registerRoutes();
     }
 
     protected function registerRoutes(): void
     {
-        Route::middleware('api')
-            ->prefix('api')
-            ->group(__DIR__.'/../../routes/api.php');
-    }
-
-    protected function registerJwt(): void
-    {
-        $this->app->register(
-            \Tymon\JWTAuth\Providers\LaravelServiceProvider::class
+        $this->loadRoutesFrom(
+            __DIR__.'/../../routes/api.php'
         );
     }
 
     protected function registerAuthGuard(): void
     {
-        config([
-            'auth.guards.jwt' => [
-                'driver' => 'jwt',
-                'provider' => 'users',
-            ],
-        ]);
+        if (! app()->configurationIsCached()) {
+            config([
+                'auth.guards.jwt' => [
+                    'driver' => 'jwt',
+                    'provider' => 'users',
+                ],
+            ]);
+        }
     }
 }
