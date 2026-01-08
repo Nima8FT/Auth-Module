@@ -3,13 +3,11 @@
   "description": "Standalone authentication module",
   "type": "library",
   "license": "MIT",
-
   "autoload": {
     "psr-4": {
       "AuthModule\\": "src/"
     }
   },
-
   "require": {
     "php": "^8.2",
     "illuminate/support": "^11.0|^12.0",
@@ -17,8 +15,6 @@
     "illuminate/http": "^11.0|^12.0",
     "tymon/jwt-auth": "^2.0"
   },
-
-
   "extra": {
     "laravel": {
       "providers": [
